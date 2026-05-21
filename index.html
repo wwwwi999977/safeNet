@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeNet — Built here. Protects everywhere.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --dark:        #0E0F0B;
+  --dark-2:      #141510;
+  --dark-3:      #1A1C14;
+  --green:       #2D5C3F;
+  --green-light: #3A7A52;
+  --green-glow:  #4A9E6A;
+  --gold:        #C9A84C;
+  --gold-light:  #E2C06A;
+  --gold-pale:   #F0DFA0;
+  --cream:       #F5F0E8;
+  --warm-white:  #FAF8F3;
+  --silver:      #C8C4B8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  font-family: 'DM Mono', monospace;
+  color: var(--cream);
+  overflow-x: hidden;
+}
+
+/* noise */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999; opacity: 0.5;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 48px;
+  background: linear-gradient(180deg, rgba(14,15,11,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.06);
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--gold-light);
+}
+
+.nav-links {
+  display: flex; gap: 40px; list-style: none;
+}
+
+.nav-links a {
+  font-size: 9px; letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.4);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover { color: var(--gold-light); }
+
+.nav-cta {
+  font-size: 9px; letter-spacing: 0.25em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  padding: 10px 24px; border-radius: 3px;
+  cursor: pointer; transition: all 0.3s;
+}
+.nav-cta:hover { background: rgba(201,168,76,0.08); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 24px 80px;
+  position: relative; overflow: hidden;
+}
+
+.hero-glow-1 {
+  position: absolute; top: 20%; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(45,92,63,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-glow-2 {
+  position: absolute; bottom: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  font-size: 9.5px; letter-spacing: 0.42em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 48px; opacity: 0.75;
+  animation: fadeUp 0.9s ease forwards 0.2s;
+  opacity: 0;
+}
+
+/* ── CARD 3D ── */
+.card-wrapper {
+  perspective: 1400px;
+  margin-bottom: 72px;
+  animation: fadeUp 1s ease forwards 0.5s;
+  opacity: 0;
+}
+
+.card {
+  width: 400px; height: 252px;
+  border-radius: 20px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(-12deg) rotateX(7deg);
+  transition: transform 0.8s cubic-bezier(0.23,1,0.32,1);
+  cursor: pointer;
+  box-shadow:
+    0 60px 120px rgba(0,0,0,0.75),
+    0 0 0 1px rgba(201,168,76,0.12),
+    0 0 80px rgba(45,92,63,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+.card:hover { transform: rotateY(0deg) rotateX(0deg) scale(1.04); }
+
+.card-face {
+  position: absolute; inset: 0; border-radius: 20px; overflow: hidden;
+  background: linear-gradient(135deg, #1A2B1D 0%, #0F1A10 40%, #192514 70%, #0E150B 100%);
+}
+
+.card-pattern {
+  position: absolute; inset: 0; opacity: 0.055;
+  background-image:
+    repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 44deg, rgba(201,168,76,0.9) 45deg, transparent 46deg, transparent 89deg, rgba(201,168,76,0.9) 90deg),
+    repeating-conic-gradient(from 22.5deg at 25% 25%, transparent 0deg, transparent 44deg, rgba(201,168,76,0.5) 45deg, transparent 46deg);
+  background-size: 38px 38px, 38px 38px;
+}
+
+.card-shimmer {
+  position: absolute; inset: 0;
+  background: linear-gradient(108deg, transparent 28%, rgba(201,168,76,0.06) 48%, rgba(255,255,255,0.04) 50%, transparent 72%);
+  animation: shimmer 5s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{transform:translateX(-130%)} 50%{transform:translateX(130%)} }
+
+.card-face::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.45) 30%, rgba(255,255,255,0.2) 50%, rgba(201,168,76,0.45) 70%, transparent);
+}
+
+.card-chip {
+  position: absolute; top: 34px; left: 34px;
+  width: 46px; height: 35px;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), #9A7228);
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.card-chip::before {
+  content: ''; position: absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width: 30px; height: 22px;
+  border: 1.5px solid rgba(0,0,0,0.2); border-radius: 4px;
+}
+
+.card-led {
+  position: absolute; top: 38px; right: 34px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #4ADE80;
+  box-shadow: 0 0 14px #4ADE80, 0 0 28px rgba(74,222,128,0.4);
+  animation: pulse-led 2.5s ease-in-out infinite;
+}
+@keyframes pulse-led {
+  0%,100%{opacity:1;box-shadow:0 0 14px #4ADE80,0 0 28px rgba(74,222,128,0.4)}
+  50%{opacity:0.55;box-shadow:0 0 6px #4ADE80}
+}
+
+.card-brand { position: absolute; bottom: 30px; left: 34px; }
+.card-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px; font-weight: 300;
+  letter-spacing: 0.15em; color: var(--gold-light); line-height: 1;
+}
+.card-brand-sub {
+  font-size: 7px; letter-spacing: 0.35em;
+  color: rgba(201,168,76,0.45); margin-top: 5px; text-transform: uppercase;
+}
+
+.card-origin { position: absolute; bottom: 32px; right: 34px; text-align: right; }
+.saudi-flag { font-size: 17px; display: block; margin-bottom: 3px; }
+.card-origin-text {
+  font-size: 7px; letter-spacing: 0.22em;
+  color: rgba(201,168,76,0.38); text-transform: uppercase; line-height: 2;
+}
+
+.card-stripe {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--green-glow) 25%, var(--gold) 50%, var(--green-glow) 75%, transparent);
+  opacity: 0.5;
+}
+
+/* ── HEADLINE ── */
+.headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(46px, 8vw, 88px);
+  font-weight: 300; line-height: 1.05; text-align: center;
+  color: var(--warm-white); letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  animation: fadeUp 1s ease forwards 0.8s; opacity: 0;
+}
+.headline em { font-style: italic; color: var(--gold-light); }
+
+.tagline {
+  font-size: 10px; letter-spacing: 0.34em;
+  text-transform: uppercase; color: rgba(245,240,232,0.38);
+  text-align: center; margin-bottom: 56px;
+  animation: fadeUp 1s ease forwards 1s; opacity: 0;
+}
+
+.cta-row {
+  display: flex; gap: 16px; align-items: center;
+  animation: fadeUp 1s ease forwards 1.2s; opacity: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--green-light), var(--green));
+  color: var(--warm-white); border: none;
+  padding: 15px 40px; border-radius: 4px; cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  box-shadow: 0 4px 24px rgba(45,92,63,0.4);
+  transition: all 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(45,92,63,0.55); }
+
+.btn-ghost {
+  background: transparent; color: rgba(245,240,232,0.45);
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 15px 40px; border-radius: 4px; cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  transition: all 0.3s;
+}
+.btn-ghost:hover { border-color: rgba(201,168,76,0.5); color: var(--gold-light); }
+
+/* ── FEATURES ── */
+.features-section { padding: 100px 0; max-width: 960px; margin: 0 auto; padding-inline: 32px; }
+
+.section-label {
+  font-size: 9px; letter-spacing: 0.42em;
+  text-transform: uppercase; color: var(--gold); opacity: 0.6;
+  margin-bottom: 16px;
+}
+
+.section-divider {
+  width: 48px; height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 56px;
+}
+
+.features-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+}
+
+.feature {
+  padding: 44px 36px;
+  background: rgba(245,240,232,0.02);
+  border: 1px solid rgba(201,168,76,0.07);
+  transition: background 0.4s, border-color 0.4s;
+}
+.feature:hover { background: rgba(45,92,63,0.06); border-color: rgba(201,168,76,0.15); }
+.feature:nth-child(2) { border-left: none; border-right: none; }
+
+.feature-num { font-size: 9px; letter-spacing: 0.32em; color: var(--gold); opacity: 0.55; margin-bottom: 22px; }
+.feature-icon { font-size: 26px; margin-bottom: 18px; }
+.feature-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 400;
+  color: var(--warm-white); margin-bottom: 14px;
+}
+.feature-desc {
+  font-size: 9.5px; letter-spacing: 0.08em;
+  line-height: 2.1; color: rgba(245,240,232,0.32); text-transform: uppercase;
+}
+
+/* ── REVIEWS ── */
+.reviews-section {
+  padding: 100px 32px;
+  border-top: 1px solid rgba(201,168,76,0.07);
+  max-width: 960px; margin: 0 auto;
+}
+
+.reviews-header { margin-bottom: 64px; }
+
+.reviews-meta {
+  display: flex; align-items: baseline; gap: 20px; margin-bottom: 8px;
+}
+
+.reviews-score {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px; font-weight: 300; color: var(--gold-light);
+  line-height: 1;
+}
+
+.reviews-out-of {
+  font-size: 10px; letter-spacing: 0.25em;
+  color: rgba(245,240,232,0.3); text-transform: uppercase;
+}
+
+.stars-row { display: flex; gap: 4px; margin-bottom: 12px; }
+.star { color: var(--gold); font-size: 16px; }
+.star.half { opacity: 0.4; }
+
+.reviews-count {
+  font-size: 9px; letter-spacing: 0.28em;
+  color: rgba(245,240,232,0.28); text-transform: uppercase;
+}
+
+/* review cards */
+.reviews-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+  margin-bottom: 40px;
+}
+
+.review-card {
+  background: rgba(245,240,232,0.025);
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 4px; padding: 32px 28px;
+  transition: border-color 0.3s, background 0.3s;
+  position: relative; overflow: hidden;
+}
+.review-card::before {
+  content: '"';
+  position: absolute; top: -10px; left: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 100px; font-weight: 300;
+  color: rgba(201,168,76,0.06); line-height: 1;
+  pointer-events: none;
+}
+.review-card:hover { border-color: rgba(201,168,76,0.18); background: rgba(45,92,63,0.04); }
+
+.review-stars { display: flex; gap: 3px; margin-bottom: 16px; }
+.review-star { color: var(--gold); font-size: 12px; }
+
+.review-text {
+  font-size: 11px; line-height: 1.95;
+  color: rgba(245,240,232,0.55); margin-bottom: 24px;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 300;
+}
+
+.review-author { display: flex; align-items: center; gap: 14px; }
+
+.review-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+  border: 1px solid rgba(201,168,76,0.2);
+  flex-shrink: 0;
+}
+
+.review-author-info {}
+.review-author-name {
+  font-size: 9.5px; letter-spacing: 0.18em;
+  color: var(--cream); text-transform: uppercase; margin-bottom: 3px;
+}
+.review-author-loc {
+  font-size: 8.5px; letter-spacing: 0.18em;
+  color: rgba(245,240,232,0.28); text-transform: uppercase;
+}
+
+.review-verified {
+  position: absolute; top: 24px; right: 24px;
+  font-size: 7.5px; letter-spacing: 0.2em;
+  color: var(--green-glow); text-transform: uppercase;
+  display: flex; align-items: center; gap: 5px;
+}
+.review-verified::before {
+  content: '✓'; font-size: 9px; color: var(--green-glow);
+}
+
+/* Load more */
+.load-more-row { text-align: center; margin-top: 40px; }
+.btn-load {
+  background: transparent; color: rgba(245,240,232,0.35);
+  border: 1px solid rgba(201,168,76,0.12);
+  padding: 13px 40px; border-radius: 3px; cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+  transition: all 0.3s;
+}
+.btn-load:hover { border-color: rgba(201,168,76,0.35); color: var(--gold-light); }
+
+/* ── ORIGIN SECTION ── */
+.origin-section {
+  padding: 100px 32px;
+  text-align: center;
+  border-top: 1px solid rgba(201,168,76,0.07);
+  position: relative; overflow: hidden;
+}
+.origin-section::before {
+  content: 'المملكة العربية السعودية';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px,7vw,80px);
+  color: rgba(201,168,76,0.04);
+  white-space: nowrap; pointer-events: none; letter-spacing: 0.1em;
+}
+
+.origin-label {
+  font-size: 9px; letter-spacing: 0.44em;
+  color: var(--gold); text-transform: uppercase;
+  margin-bottom: 20px; opacity: 0.65;
+}
+.origin-divider {
+  width: 50px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 32px;
+}
+.origin-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px,5vw,58px);
+  font-weight: 300; color: var(--warm-white);
+  letter-spacing: 0.04em; margin-bottom: 16px;
+}
+.origin-title em { color: var(--gold-light); font-style: italic; }
+.origin-sub {
+  font-size: 9.5px; letter-spacing: 0.28em;
+  color: rgba(245,240,232,0.25); text-transform: uppercase;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 32px 48px;
+  border-top: 1px solid rgba(245,240,232,0.04);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300;
+  letter-spacing: 0.18em; color: rgba(201,168,76,0.4);
+}
+.footer-text {
+  font-size: 8.5px; letter-spacing: 0.22em;
+  color: rgba(245,240,232,0.15); text-transform: uppercase;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 18px 20px; }
+  .nav-links { display: none; }
+  .card { width: 310px; height: 196px; }
+  .card-brand-name { font-size: 24px; }
+  .features-grid, .reviews-grid { grid-template-columns: 1fr; gap: 2px; }
+  .feature:nth-child(2) { border: 1px solid rgba(201,168,76,0.07); border-top: none; border-bottom: none; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SafeNet</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#origin">About</a></li>
+  </ul>
+  <button class="nav-cta">Get Protected</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+
+  <p class="eyebrow">Introducing SafeNet — Protection Card</p>
+
+  <div class="card-wrapper">
+    <div class="card">
+      <div class="card-face">
+        <div class="card-pattern"></div>
+        <div class="card-shimmer"></div>
+        <div class="card-chip"></div>
+        <div class="card-led"></div>
+        <div class="card-brand">
+          <div class="card-brand-name">SafeNet</div>
+          <div class="card-brand-sub">Protection · Anywhere</div>
+        </div>
+        <div class="card-origin">
+          <span class="saudi-flag">🇸🇦</span>
+          <div class="card-origin-text">Made in<br>Saudi Arabia</div>
+        </div>
+        <div class="card-stripe"></div>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="headline">Built <em>here.</em><br>Protects everywhere.</h1>
+  <p class="tagline">Public Wi-Fi protection · Saudi-engineered · Always on</p>
+  <div class="cta-row">
+    <button class="btn-primary">Get Protected</button>
+    <button class="btn-ghost">Learn More</button>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <p class="section-label">What it does</p>
+  <div class="section-divider"></div>
+  <div class="features-grid">
+    <div class="feature">
+      <p class="feature-num">01</p>
+      <div class="feature-icon">🛡</div>
+      <h3 class="feature-title">Auto Detect</h3>
+      <p class="feature-desc">Instantly identifies fake networks & evil twin attacks before you connect</p>
+    </div>
+    <div class="feature">
+      <p class="feature-num">02</p>
+      <div class="feature-icon">🔐</div>
+      <h3 class="feature-title">Encrypt & Shield</h3>
+      <p class="feature-desc">End-to-end encryption active the moment you open your device</p>
+    </div>
+    <div class="feature">
+      <p class="feature-num">03</p>
+      <div class="feature-icon">💳</div>
+      <h3 class="feature-title">Carry Anywhere</h3>
+      <p class="feature-desc">Fits in your wallet. Works in every airport, café, mall & campus</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="reviews-header">
+    <p class="section-label">What people say</p>
+    <div class="section-divider"></div>
+    <div class="reviews-meta">
+      <div class="reviews-score">4.9</div>
+      <div class="reviews-out-of">out of 5</div>
+    </div>
+    <div class="stars-row">
+      <span class="star">★</span><span class="star">★</span>
+      <span class="star">★</span><span class="star">★</span>
+      <span class="star">★</span>
+    </div>
+    <p class="reviews-count">Based on 1,240 verified reviews</p>
+  </div>
+
+  <div class="reviews-grid">
+
+    <div class="review-card">
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-stars">
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span>
+      </div>
+      <p class="review-text">I travel every week between Riyadh and Dubai. SafeNet sits in my wallet and I never think twice about connecting at the airport anymore. Absolute peace of mind.</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:rgba(45,92,63,0.25);color:#4A9E6A">F</div>
+        <div class="review-author-info">
+          <div class="review-author-name">Fatimah A.</div>
+          <div class="review-author-loc">Riyadh, Saudi Arabia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-stars">
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span>
+      </div>
+      <p class="review-text">As a CS student I was skeptical at first. Then it caught a fake network at my university café in under 3 seconds. Genuinely impressive. Proud it's made in Saudi.</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:rgba(201,168,76,0.15);color:#C9A84C">K</div>
+        <div class="review-author-info">
+          <div class="review-author-name">Khalid M.</div>
+          <div class="review-author-loc">Jeddah, Saudi Arabia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-stars">
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span>
+      </div>
+      <p class="review-text">My whole family uses it now. Even my mom who is not technical at all — she just puts it near her phone and that's it. Simple, elegant, and it works.</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:rgba(91,163,224,0.12);color:#5BA3E0">N</div>
+        <div class="review-author-info">
+          <div class="review-author-name">Nora S.</div>
+          <div class="review-author-loc">Dammam, Saudi Arabia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-stars">
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span>
+      </div>
+      <p class="review-text">We deployed SafeNet across all our hotel lounges. Our guests noticed the difference immediately. Zero complaints about Wi-Fi security since installation.</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:rgba(201,168,76,0.15);color:#C9A84C">A</div>
+        <div class="review-author-info">
+          <div class="review-author-name">Abdullah R.</div>
+          <div class="review-author-loc">Hotel Manager · Makkah</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-stars">
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span>
+      </div>
+      <p class="review-text">I work remotely from cafés every day. Before SafeNet I used a VPN but it was slow and complicated. This card just works — instantly, automatically, silently.</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:rgba(45,92,63,0.25);color:#4A9E6A">L</div>
+        <div class="review-author-info">
+          <div class="review-author-name">Lina T.</div>
+          <div class="review-author-loc">Riyadh, Saudi Arabia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-verified">Verified Purchase</div>
+      <div class="review-stars">
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span><span class="review-star">★</span>
+        <span class="review-star">★</span>
+      </div>
+      <p class="review-text">The design alone made me want to buy it. Then I realized how well it actually works. SafeNet is the kind of Saudi tech product I've been waiting years to see.</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:rgba(91,163,224,0.12);color:#5BA3E0">O</div>
+        <div class="review-author-info">
+          <div class="review-author-name">Omar H.</div>
+          <div class="review-author-loc">Medina, Saudi Arabia</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="load-more-row">
+    <button class="btn-load">Load More Reviews</button>
+  </div>
+</section>
+
+<!-- ORIGIN -->
+<section class="origin-section" id="origin">
+  <p class="origin-label">Saudi-Engineered Technology</p>
+  <div class="origin-divider"></div>
+  <h2 class="origin-title">Proudly <em>made</em> in<br>Saudi Arabia</h2>
+  <p class="origin-sub">Designed for our world · Built for everyone · Vision 2030</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SafeNet</div>
+  <div class="footer-text">© 2024 SafeNet Solutions · Riyadh, Saudi Arabia · safenet.sa</div>
+</footer>
+
+</body>
+</html>
